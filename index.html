@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jenna Ortega | Official Portfolio</title>
+    <style>
+        body { margin: 0; background: #000; color: #fff; font-family: -apple-system, sans-serif; overflow-x: hidden; }
+        
+        /* Плавное проявление карточек при скролле */
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 1s ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        .hero { 
+            padding: 40px 20px; display: flex; flex-direction: column; align-items: center; 
+            background: linear-gradient(to bottom, #0a0a0a, #000); border-bottom: 1px solid #222; 
+        }
+
+        /* Анимация букв JENNA ORTEGA */
+        .name-container { display: flex; gap: 4px; margin-bottom: 20px; flex-wrap: wrap; justify-content: center; }
+        .letter {
+            display: inline-block; font-size: 1.8rem; letter-spacing: 5px; font-weight: 200;
+            text-transform: uppercase; opacity: 0; transform: translateY(15px);
+            animation: fadeInLetter 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+        @keyframes fadeInLetter { to { opacity: 1; transform: translateY(0); } }
+
+        .profile-pic {
+            width: 140px; height: 140px; border-radius: 50%; object-fit: cover; 
+            border: 2px solid #a855f7; box-shadow: 0 0 25px rgba(168, 85, 247, 0.4);
+            margin-bottom: 15px; cursor: pointer; transition: transform 0.3s;
+        }
+        .profile-pic:active { transform: scale(0.95); }
+        .subtitle { letter-spacing: 4px; color: #888; font-size: 0.7rem; text-transform: uppercase; }
+
+        /* ГАЛЕРЕЯ */
+        .gallery { padding: 20px; }
+        .card { background: #111; border-radius: 18px; margin-bottom: 30px; overflow: hidden; border: 1px solid #333; cursor: pointer; }
+        .card img { width: 100%; display: block; }
+        .info { padding: 20px; }
+        .tag { font-size: 10px; color: #a855f7; text-transform: uppercase; font-weight: bold; }
+        h3 { margin: 8px 0; font-size: 1.6rem; font-weight: 500; }
+        
+        /* ПЛАВНОЕ ВСПЛЫВАЮЩЕЕ ОПИСАНИЕ */
+        .description { 
+            max-height: 0; overflow: hidden; 
+            transition: max-height 0.8s cubic-bezier(0.4, 0, 0.2, 1); 
+            background: #161616;
+        }
+        .description.active { max-height: 1000px; border-top: 1px solid #333; }
+
+        .desc-content {
+            padding: 20px; opacity: 0; transform: translateY(20px); filter: blur(5px);
+            transition: opacity 0.8s ease, transform 0.8s ease, filter 0.8s ease;
+        }
+        .description.active .desc-content {
+            opacity: 1; transform: translateY(0); filter: blur(0);
+        }
+
+        .desc-line { display: block; margin-bottom: 15px; color: #bbb; line-height: 1.6; }
+
+        /* ОКНО БИОГРАФИИ */
+        #bio-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.98); z-index: 1000;
+            display: flex; flex-direction: column; align-items: center;
+            padding: 40px 25px; box-sizing: border-box; overflow-y: auto;
+            opacity: 0; visibility: hidden; transition: all 0.6s ease;
+        }
+        #bio-overlay.active { opacity: 1; visibility: visible; }
+        .close-bio { align-self: flex-end; font-size: 2.5rem; color: #a855f7; cursor: pointer; padding: 10px; }
+        .bio-content { max-width: 500px; line-height: 1.8; color: #ccc; }
+    </style>
+</head>
+<body>
+
+    <div id="bio-overlay">
+        <div class="close-bio" onclick="closeBio()">&times;</div>
+        <div class="bio-content">
+            <h2 style="color:#fff; border-bottom:1px solid #a855f7; display:inline-block; letter-spacing: 2px;">BIOGRAPHY</h2>
+            <p style="color:#ccc; line-height: 1.8; margin-top: 20px;">
+                Jenna Ortega is a defining talent of her generation. From her iconic role as <b>Wednesday Addams</b> to her performances in <i>Scream</i> and <i>Beetlejuice</i>, she has become a modern icon of cinema.
+            </p>
+            <p style="color:#ccc; line-height: 1.8;">Born in California, Jenna has always brought a unique depth to her characters, blending strength with vulnerability.</p>
+        </div>
+    </div>
+
+    <div class="hero">
+        <div class="name-container" id="jenna-name"></div>
+        <img src="https://i.ibb.co/j9LmTtfK/image.png" class="profile-pic" onclick="openBio()">
+        <div class="subtitle">Official Portfolio</div>
+    </div>
+
+    <div class="gallery">
+        <div class="card reveal" onclick="toggleDesc('wed')">
+            <img src="https://i.ibb.co/pB9SHq0s/IMG-6562.jpg">
+            <div class="info">
+                <span class="tag">Netflix Original</span>
+                <h3>Wednesday</h3>
+            </div>
+            <div id="wed" class="description">
+                <div class="desc-content">
+                    <span class="desc-line"><strong>Season 1:</strong> Investigating a supernatural mystery at Nevermore Academy. It was a journey of finding a voice in the shadows.</span>
+                    <span class="desc-line"><strong>Season 2:</strong> The mystery continues. Expect more unexpected twists and darker secrets.</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card reveal" onclick="toggleDesc('bj')">
+            <img src="https://i.ibb.co/RTk29QK4/IMG-6563.jpg">
+            <div class="info">
+                <span class="tag">Feature Film</span>
+                <h3>Beetlejuice Beetlejuice</h3>
+            </div>
+            <div id="bj" class="description">
+                <div class="desc-content">
+                    <span class="desc-line"><strong>The Role: Astrid Deetz</strong></span>
+                    <span class="desc-line">Stepping into this iconic world as Lydia's daughter was surreal. Astrid discovers the afterlife portal.</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card reveal" onclick="toggleDesc('scream')">
+            <img src="https://i.ibb.co/q30Dwfx8/IMG-6565.jpg">
+            <div class="info">
+                <span class="tag">Horror / Slasher</span>
+                <h3>Scream VI</h3>
+            </div>
+            <div id="scream" class="description">
+                <div class="desc-content">
+                    <span class="desc-line"><strong>The Role: Tara Carpenter</strong></span>
+                    <span class="desc-line">Surviving Ghostface in New York City. This chapter was about sisterhood and survival. New York, new rules.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Анимация букв имени
+        const name = "JENNA ORTEGA";
+        const container = document.getElementById('jenna-name');
+        name.split('').forEach((char, i) => {
+            const span = document.createElement('span');
+            span.textContent = char === " " ? "\u00A0" : char;
+            span.className = 'letter';
+            span.style.animationDelay = `${i * 0.08}s`;
+            container.appendChild(span);
+        });
+
+        // Скролл-анимация появления карточек
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            reveals.forEach(el => {
+                var windowHeight = window.innerHeight;
+                var elementTop = el.getBoundingClientRect().top;
+                if (elementTop < windowHeight - 100) el.classList.add("active");
+            });
+        }
+        window.addEventListener("scroll", reveal);
+        reveal();
+
+        // Функции биографии
+        function openBio() { 
+            document.getElementById("bio-overlay").classList.add("active"); 
+            document.body.style.overflow = "hidden";
+        }
+        function closeBio() { 
+            document.getElementById("bio-overlay").classList.remove("active"); 
+            document.body.style.overflow = "auto";
+        }
+        
+        function toggleDesc(id) {
+            document.getElementById(id).classList.toggle('active');
+        }
+    </script>
+</body>
+</html>
