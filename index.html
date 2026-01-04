@@ -5,138 +5,187 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jenna Ortega | Official Portfolio</title>
     <style>
+        /* Плавная прокрутка */
+        html { scroll-behavior: smooth; }
+        
         body { margin: 0; background: #000; color: #fff; font-family: -apple-system, sans-serif; overflow-x: hidden; }
         
-        /* Плавное проявление карточек при скролле */
-        .reveal { opacity: 0; transform: translateY(30px); transition: all 1s ease-out; }
+        /* Навигация сверху слева */
+        .top-nav {
+            position: fixed; top: 20px; left: 20px; z-index: 100;
+            display: flex; flex-direction: column; gap: 12px;
+            background: rgba(0,0,0,0.7); padding: 15px; border-radius: 15px; 
+            backdrop-filter: blur(10px); border: 1px solid #222;
+        }
+        .nav-link {
+            color: #888; text-decoration: none; font-size: 0.75rem; 
+            text-transform: uppercase; letter-spacing: 2px; transition: 0.4s;
+            cursor: pointer;
+        }
+        .nav-link:hover { color: #a855f7; transform: translateX(5px); }
+
+        /* Анимация появления */
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
         .hero { 
-            padding: 40px 20px; display: flex; flex-direction: column; align-items: center; 
+            padding: 120px 20px 60px; display: flex; flex-direction: column; align-items: center; 
             background: linear-gradient(to bottom, #0a0a0a, #000); border-bottom: 1px solid #222; 
         }
 
-        /* Анимация букв JENNA ORTEGA */
-        .name-container { display: flex; gap: 4px; margin-bottom: 20px; flex-wrap: wrap; justify-content: center; }
+        .name-container { display: flex; gap: 6px; margin-bottom: 25px; flex-wrap: wrap; justify-content: center; }
         .letter {
-            display: inline-block; font-size: 1.8rem; letter-spacing: 5px; font-weight: 200;
+            display: inline-block; font-size: 2.2rem; letter-spacing: 5px; font-weight: 200;
             text-transform: uppercase; opacity: 0; transform: translateY(15px);
             animation: fadeInLetter 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
         }
         @keyframes fadeInLetter { to { opacity: 1; transform: translateY(0); } }
 
         .profile-pic {
-            width: 140px; height: 140px; border-radius: 50%; object-fit: cover; 
-            border: 2px solid #a855f7; box-shadow: 0 0 25px rgba(168, 85, 247, 0.4);
-            margin-bottom: 15px; cursor: pointer; transition: transform 0.3s;
+            width: 150px; height: 150px; border-radius: 50%; object-fit: cover; 
+            border: 2px solid #a855f7; box-shadow: 0 0 30px rgba(168, 85, 247, 0.3);
+            margin-bottom: 20px; cursor: pointer; transition: 0.3s;
         }
-        .profile-pic:active { transform: scale(0.95); }
-        .subtitle { letter-spacing: 4px; color: #888; font-size: 0.7rem; text-transform: uppercase; }
 
-        /* ГАЛЕРЕЯ */
-        .gallery { padding: 20px; }
-        .card { background: #111; border-radius: 18px; margin-bottom: 30px; overflow: hidden; border: 1px solid #333; cursor: pointer; }
-        .card img { width: 100%; display: block; }
-        .info { padding: 20px; }
-        .tag { font-size: 10px; color: #a855f7; text-transform: uppercase; font-weight: bold; }
-        h3 { margin: 8px 0; font-size: 1.6rem; font-weight: 500; }
+        .section-title { 
+            padding: 100px 20px 30px; font-size: 1.1rem; color: #a855f7; 
+            letter-spacing: 8px; text-transform: uppercase; text-align: center; font-weight: 300;
+        }
+
+        .gallery { padding: 20px; max-width: 550px; margin: 0 auto; }
+        .card { background: #111; border-radius: 20px; margin-bottom: 35px; overflow: hidden; border: 1px solid #333; cursor: pointer; }
+        .card img, .card video { width: 100%; height: auto; display: block; filter: brightness(0.9); transition: 0.5s; }
+        .card:hover img { filter: brightness(1.1); transform: scale(1.02); }
         
-        /* ПЛАВНОЕ ВСПЛЫВАЮЩЕЕ ОПИСАНИЕ */
-        .description { 
-            max-height: 0; overflow: hidden; 
-            transition: max-height 0.8s cubic-bezier(0.4, 0, 0.2, 1); 
-            background: #161616;
-        }
-        .description.active { max-height: 1000px; border-top: 1px solid #333; }
+        .info { padding: 25px; }
+        .tag { font-size: 11px; color: #a855f7; text-transform: uppercase; font-weight: bold; margin-bottom: 10px; display: block; letter-spacing: 1px; }
+        h3 { margin: 5px 0; font-size: 1.8rem; font-weight: 500; }
+        
+        .description { max-height: 0; overflow: hidden; transition: max-height 0.8s ease; background: #151515; }
+        .description.active { max-height: 1200px; border-top: 1px solid #333; }
+        .desc-content { padding: 25px; color: #ccc; line-height: 1.8; font-size: 1rem; }
+        .desc-line { display: block; margin-bottom: 15px; }
 
-        .desc-content {
-            padding: 20px; opacity: 0; transform: translateY(20px); filter: blur(5px);
-            transition: opacity 0.8s ease, transform 0.8s ease, filter 0.8s ease;
-        }
-        .description.active .desc-content {
-            opacity: 1; transform: translateY(0); filter: blur(0);
-        }
-
-        .desc-line { display: block; margin-bottom: 15px; color: #bbb; line-height: 1.6; }
-
-        /* ОКНО БИОГРАФИИ */
         #bio-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.98); z-index: 1000;
             display: flex; flex-direction: column; align-items: center;
-            padding: 40px 25px; box-sizing: border-box; overflow-y: auto;
-            opacity: 0; visibility: hidden; transition: all 0.6s ease;
+            padding: 60px 30px; box-sizing: border-box; overflow-y: auto;
+            opacity: 0; visibility: hidden; transition: 0.5s;
         }
         #bio-overlay.active { opacity: 1; visibility: visible; }
-        .close-bio { align-self: flex-end; font-size: 2.5rem; color: #a855f7; cursor: pointer; padding: 10px; }
-        .bio-content { max-width: 500px; line-height: 1.8; color: #ccc; }
+        .close-bio { align-self: flex-end; font-size: 3.5rem; color: #a855f7; cursor: pointer; margin-bottom: 20px; }
     </style>
 </head>
 <body>
 
+    <nav class="top-nav">
+        <a href="#movies" class="nav-link">Filmography</a>
+        <a href="#awards" class="nav-link">Achievements</a>
+        <a href="#family" class="nav-link">Heritage</a>
+        <a href="#life" class="nav-link">Influence</a>
+    </nav>
+
     <div id="bio-overlay">
         <div class="close-bio" onclick="closeBio()">&times;</div>
-        <div class="bio-content">
-            <h2 style="color:#fff; border-bottom:1px solid #a855f7; display:inline-block; letter-spacing: 2px;">BIOGRAPHY</h2>
-            <p style="color:#ccc; line-height: 1.8; margin-top: 20px;">
-                Jenna Ortega is a defining talent of her generation. From her iconic role as <b>Wednesday Addams</b> to her performances in <i>Scream</i> and <i>Beetlejuice</i>, she has become a modern icon of cinema.
-            </p>
-            <p style="color:#ccc; line-height: 1.8;">Born in California, Jenna has always brought a unique depth to her characters, blending strength with vulnerability.</p>
+        <div class="bio-content" style="max-width: 600px;">
+            <h2 style="color:#a855f7; letter-spacing: 5px; text-transform: uppercase;">The Journey of Jenna Ortega</h2>
+            <p style="font-size: 1.1rem; line-height: 1.8;">Jenna Marie Ortega (born September 27, 2002) is an American actress whose career began at the age of nine. From her early breakout in the CW dramedy series Jane the Virgin to her status as a global icon, Jenna has consistently chosen roles that challenge expectations.</p>
+            <p style="font-size: 1.1rem; line-height: 1.8;">Beyond her acting prowess, she is a published author of the book "It's All Love" and a dedicated advocate for representation in Hollywood, using her platform to champion her Mexican and Puerto Rican heritage.</p>
         </div>
     </div>
 
     <div class="hero">
         <div class="name-container" id="jenna-name"></div>
         <img src="https://i.ibb.co/j9LmTtfK/image.png" class="profile-pic" onclick="openBio()">
-        <div class="subtitle">Official Portfolio</div>
+        <div style="letter-spacing: 5px; color: #666; font-size: 0.8rem; text-transform: uppercase;">Official Digital Space</div>
     </div>
 
     <div class="gallery">
+        
+        <div id="movies" class="section-title">Filmography</div>
+        
         <div class="card reveal" onclick="toggleDesc('wed')">
             <img src="https://i.ibb.co/pB9SHq0s/IMG-6562.jpg">
-            <div class="info">
-                <span class="tag">Netflix Original</span>
-                <h3>Wednesday</h3>
-            </div>
+            <div class="info"><span class="tag">Netflix Global Phenomenon</span><h3>Wednesday</h3></div>
             <div id="wed" class="description">
                 <div class="desc-content">
-                    <span class="desc-line"><strong>Season 1:</strong> Investigating a supernatural mystery at Nevermore Academy. It was a journey of finding a voice in the shadows.</span>
-                    <span class="desc-line"><strong>Season 2:</strong> The mystery continues. Expect more unexpected twists and darker secrets.</span>
+                    <span class="desc-line">In this Tim Burton reimagining, Jenna portrays <b>Wednesday Addams</b> during her years as a student at Nevermore Academy.</span>
+                    <span class="desc-line">Her performance, including the now-viral self-choreographed dance, helped the show become one of the most-watched English-language series in Netflix history. She perfectly balances the character's cold exterior with a sharp, detective-like intelligence.</span>
                 </div>
             </div>
         </div>
 
         <div class="card reveal" onclick="toggleDesc('bj')">
             <img src="https://i.ibb.co/RTk29QK4/IMG-6563.jpg">
-            <div class="info">
-                <span class="tag">Feature Film</span>
-                <h3>Beetlejuice Beetlejuice</h3>
-            </div>
+            <div class="info"><span class="tag">Warner Bros. Pictures</span><h3>Beetlejuice Beetlejuice</h3></div>
             <div id="bj" class="description">
                 <div class="desc-content">
-                    <span class="desc-line"><strong>The Role: Astrid Deetz</strong></span>
-                    <span class="desc-line">Stepping into this iconic world as Lydia's daughter was surreal. Astrid discovers the afterlife portal.</span>
+                    <span class="desc-line">Stepping into the cult classic sequel as <b>Astrid Deetz</b>, the rebellious daughter of Lydia Deetz (Winona Ryder).</span>
+                    <span class="desc-line">Jenna brings a grounded, modern energy to the whimsical and chaotic world of the Afterlife. Her collaboration with Tim Burton continues to define her career as a "Scream Queen" and dramatic powerhouse of the 21st century.</span>
                 </div>
             </div>
         </div>
 
         <div class="card reveal" onclick="toggleDesc('scream')">
             <img src="https://i.ibb.co/q30Dwfx8/IMG-6565.jpg">
-            <div class="info">
-                <span class="tag">Horror / Slasher</span>
-                <h3>Scream VI</h3>
-            </div>
+            <div class="info"><span class="tag">Paramount Horror</span><h3>Scream VI</h3></div>
             <div id="scream" class="description">
                 <div class="desc-content">
-                    <span class="desc-line"><strong>The Role: Tara Carpenter</strong></span>
-                    <span class="desc-line">Surviving Ghostface in New York City. This chapter was about sisterhood and survival. New York, new rules.</span>
+                    <span class="desc-line">Reprising her role as <b>Tara Carpenter</b>, Jenna takes center stage as a survivor facing Ghostface in the sprawling streets of New York City.</span>
+                    <span class="desc-line">Her performance in the Scream franchise has been praised for its emotional depth, proving she can lead a massive horror franchise with both vulnerability and immense strength.</span>
                 </div>
             </div>
         </div>
+
+        <div class="card reveal">
+            <video controls playsinline poster="https://i.ibb.co/j9LmTtfK/image.png">
+                <source src="https://v1.pinimg.com/videos/mc/720p/f1/82/35/f1823548906660e57f5c5354922115f4.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="info"><span class="tag">Exclusive Moment</span><h3>Gallery Clip</h3></div>
+        </div>
+
+        <div id="awards" class="section-title">Achievements</div>
+        <div class="card reveal" onclick="toggleDesc('aw')">
+            <div class="info"><span class="tag">Industry Recognition</span><h3>Major Honors</h3></div>
+            <div id="aw" class="description">
+                <div class="desc-content">
+                    <span class="desc-line">🏆 <b>MTV Movie & TV Awards:</b> Winner for Best Performance in a Show (2023).</span>
+                    <span class="desc-line">⭐ <b>People's Choice Awards:</b> Winner for The Comedy TV Star of the Year.</span>
+                    <span class="desc-line">🎬 <b>Emmy Awards:</b> Nominated for Outstanding Lead Actress in a Comedy Series.</span>
+                    <span class="desc-line">🎭 <b>Golden Globes:</b> Nominated for Best Actress in a Musical or Comedy Series.</span>
+                    <span class="desc-line">📜 <b>SAG Awards:</b> Nominated for Outstanding Performance by a Female Actor.</span>
+                    <span class="desc-line">📚 <b>Literature:</b> Published author of "It's All Love: Strategies for Your Heart and Soul".</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="family" class="section-title">Heritage</div>
+        <div class="card reveal" onclick="toggleDesc('fam')">
+            <div class="info"><span class="tag">Personal Roots</span><h3>Family & Origins</h3></div>
+            <div id="fam" class="description">
+                <div class="desc-content">
+                    <span class="desc-line">Jenna Marie Ortega was raised in the Coachella Valley, California. She is the fourth of six children, growing up in a close-knit household of Mexican and Puerto Rican descent.</span>
+                    <span class="desc-line">She often speaks about how her parents sacrificed a lot to help her pursue acting, and how her large family keeps her grounded despite her massive international fame.</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="life" class="section-title">Influence</div>
+        <div class="card reveal" onclick="toggleDesc('lif')">
+            <div class="info"><span class="tag">Beyond Acting</span><h3>Public Impact</h3></div>
+            <div id="lif" class="description">
+                <div class="desc-content">
+                    <span class="desc-line"><b>Philanthropy:</b> Jenna is a prominent advocate for immigration rights, mental health awareness, and the LGBTQ+ community.</span>
+                    <span class="desc-line"><b>Fashion:</b> As a brand ambassador for Dior and Adidas, she has become a global style icon, blending "Gothic Glam" with modern streetwear.</span>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        // Анимация букв имени
         const name = "JENNA ORTEGA";
         const container = document.getElementById('jenna-name');
         name.split('').forEach((char, i) => {
@@ -147,31 +196,28 @@
             container.appendChild(span);
         });
 
-        // Скролл-анимация появления карточек
         function reveal() {
             var reveals = document.querySelectorAll(".reveal");
             reveals.forEach(el => {
-                var windowHeight = window.innerHeight;
-                var elementTop = el.getBoundingClientRect().top;
-                if (elementTop < windowHeight - 100) el.classList.add("active");
+                if (el.getBoundingClientRect().top < window.innerHeight - 50) el.classList.add("active");
             });
         }
         window.addEventListener("scroll", reveal);
         reveal();
 
-        // Функции биографии
         function openBio() { 
             document.getElementById("bio-overlay").classList.add("active"); 
-            document.body.style.overflow = "hidden";
+            document.body.style.overflow="hidden"; 
         }
         function closeBio() { 
             document.getElementById("bio-overlay").classList.remove("active"); 
-            document.body.style.overflow = "auto";
+            document.body.style.overflow="auto"; 
         }
-        
-        function toggleDesc(id) {
-            document.getElementById(id).classList.toggle('active');
+        function toggleDesc(id) { 
+            document.getElementById(id).classList.toggle('active'); 
         }
     </script>
 </body>
+</html>
+
 </html>
